@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Satheesh K — Academic Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --bg:#F4F1EB;
+  --surface:#FDFCF9;
+  --surface2:#EFECE4;
+  --ink:#1A1714;
+  --ink2:#4A4540;
+  --ink3:#8A837A;
+  --accent:#1D4ED8;
+  --accent2:#3B82F6;
+  --accent-pale:#EFF6FF;
+  --gold:#B45309;
+  --gold-pale:#FEF3C7;
+  --green:#15803D;
+  --green-pale:#DCFCE7;
+  --border:#DDD8CE;
+  --shadow:0 1px 3px rgba(26,23,20,0.08), 0 4px 16px rgba(26,23,20,0.06);
+  --shadow-lg:0 8px 32px rgba(26,23,20,0.12);
+}
+
+html{scroll-behavior:smooth;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  font-size:15px;
+  line-height:1.6;
+}
+
+/* ── LAYOUT ── */
+.shell{display:flex;min-height:100vh;}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:280px;
+  flex-shrink:0;
+  background:var(--ink);
+  color:#E8E4DC;
+  display:flex;
+  flex-direction:column;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+  padding:36px 0 24px;
+}
+
+.sidebar-avatar{
+  width:80px;height:80px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#2563EB,#1D4ED8);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Serif Display',serif;
+  font-size:32px;
+  color:#fff;
+  margin:0 auto 20px;
+  border:3px solid rgba(255,255,255,0.12);
+  flex-shrink:0;
+}
+
+.sidebar-name{
+  font-family:'DM Serif Display',serif;
+  font-size:22px;
+  text-align:center;
+  color:#F5F0E8;
+  padding:0 24px;
+  line-height:1.2;
+}
+.sidebar-role{
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:#6B8DD6;
+  text-align:center;
+  padding:6px 24px 0;
+}
+
+.sidebar-divider{
+  height:1px;background:rgba(255,255,255,0.08);
+  margin:24px 24px;
+}
+
+.sidebar-section-label{
+  font-size:9px;font-weight:700;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:#5A7DBF;
+  padding:0 24px 10px;
+}
+
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 24px;
+  cursor:pointer;
+  border-radius:0;
+  transition:all 0.2s;
+  font-size:13.5px;
+  font-weight:400;
+  color:#B0A898;
+  position:relative;
+  text-decoration:none;
+}
+.nav-item:hover{background:rgba(255,255,255,0.05);color:#E8E4DC;}
+.nav-item.active{color:#fff;background:rgba(59,130,246,0.18);}
+.nav-item.active::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:#3B82F6;border-radius:0 2px 2px 0;
+}
+.nav-icon{
+  width:18px;height:18px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;
+}
+
+.sidebar-contact{
+  margin-top:auto;
+  padding:24px 24px 0;
+}
+.contact-item{
+  display:flex;align-items:center;gap:10px;
+  font-size:11.5px;color:#8A7F74;
+  padding:5px 0;
+  overflow:hidden;
+}
+.contact-item a{color:#6B8DD6;text-decoration:none;}
+.contact-item a:hover{color:#93B4F0;}
+
+/* ── MAIN ── */
+.main{
+  flex:1;
+  overflow:auto;
+  background:var(--bg);
+}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:18px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.topbar-breadcrumb{
+  font-size:12px;color:var(--ink3);
+  display:flex;align-items:center;gap:8px;
+}
+.topbar-breadcrumb span{color:var(--ink2);}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.badge-award{
+  display:flex;align-items:center;gap:6px;
+  background:var(--gold-pale);
+  color:var(--gold);
+  border:1px solid #FDE68A;
+  padding:5px 14px;
+  border-radius:999px;
+  font-size:11px;font-weight:600;
+  letter-spacing:0.03em;
+}
+
+/* ── CONTENT ── */
+.content{padding:40px;}
+
+/* ── SECTION TITLE ── */
+.section{
+  margin-bottom:48px;
+  animation:fadeUp 0.5s ease both;
+}
+.section-header{
+  display:flex;align-items:baseline;gap:16px;
+  margin-bottom:24px;
+}
+.section-title{
+  font-family:'DM Serif Display',serif;
+  font-size:26px;
+  color:var(--ink);
+}
+.section-subtitle{
+  font-size:13px;color:var(--ink3);
+  font-style:italic;
+}
+
+/* ── STAT CARDS ── */
+.stat-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:40px;
+}
+.stat-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px;
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--accent);
+}
+.stat-card:nth-child(2)::before{background:#7C3AED;}
+.stat-card:nth-child(3)::before{background:var(--green);}
+.stat-card:nth-child(4)::before{background:var(--gold);}
+
+.stat-number{
+  font-family:'DM Serif Display',serif;
+  font-size:42px;
+  color:var(--ink);
+  line-height:1;
+  margin-bottom:4px;
+}
+.stat-label{font-size:12px;color:var(--ink3);font-weight:500;letter-spacing:0.04em;}
+.stat-sub{font-size:11px;color:var(--ink3);margin-top:6px;}
+.stat-icon{
+  position:absolute;right:20px;top:20px;
+  font-size:28px;opacity:0.18;
+}
+
+/* ── HERO BIO ── */
+.hero-bio{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px 40px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:40px;
+  align-items:start;
+  margin-bottom:40px;
+  box-shadow:var(--shadow);
+}
+.bio-title{
+  font-family:'DM Serif Display',serif;
+  font-size:32px;color:var(--ink);
+  margin-bottom:4px;
+}
+.bio-role{
+  font-size:13px;font-weight:600;letter-spacing:0.08em;
+  text-transform:uppercase;color:var(--accent);
+  margin-bottom:16px;
+}
+.bio-text{
+  font-size:14.5px;color:var(--ink2);
+  line-height:1.75;
+  max-width:580px;
+}
+
+.skills-pills{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;
+}
+.pill{
+  padding:5px 14px;
+  background:var(--accent-pale);
+  color:var(--accent);
+  border:1px solid #BFDBFE;
+  border-radius:999px;
+  font-size:12px;font-weight:500;
+}
+.pill.green{background:var(--green-pale);color:var(--green);border-color:#BBF7D0;}
+.pill.gold{background:var(--gold-pale);color:var(--gold);border-color:#FDE68A;}
+.pill.purple{background:#F5F3FF;color:#7C3AED;border-color:#DDD6FE;}
+
+.bio-aside{
+  display:flex;flex-direction:column;gap:12px;
+  min-width:200px;
+}
+.quick-stat{
+  background:var(--surface2);
+  border-radius:10px;
+  padding:16px 20px;
+  text-align:center;
+}
+.qs-num{
+  font-family:'DM Serif Display',serif;
+  font-size:30px;color:var(--ink);
+}
+.qs-label{font-size:11px;color:var(--ink3);font-weight:500;margin-top:2px;}
+
+/* ── CARD ── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:28px 32px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+  transition:box-shadow 0.2s;
+}
+.card:hover{box-shadow:var(--shadow-lg);}
+
+/* ── EXPERIENCE ── */
+.exp-item{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:0 20px;
+  position:relative;
+  padding-bottom:32px;
+}
+.exp-item:last-child{padding-bottom:0;}
+.exp-line{
+  display:flex;flex-direction:column;align-items:center;
+  position:relative;
+}
+.exp-dot{
+  width:14px;height:14px;border-radius:50%;
+  background:var(--accent);border:3px solid var(--surface);
+  outline:2px solid var(--accent);
+  flex-shrink:0;margin-top:4px;
+}
+.exp-item:not(:first-child) .exp-dot{background:var(--ink3);outline-color:var(--ink3);}
+.exp-connector{
+  width:2px;flex:1;
+  background:var(--border);
+  margin-top:6px;
+}
+.exp-item:last-child .exp-connector{display:none;}
+.exp-body{}
+.exp-title{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.exp-org{font-size:13px;color:var(--accent);font-weight:500;margin-bottom:2px;}
+.exp-period{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--ink3);
+  background:var(--surface2);
+  display:inline-block;
+  padding:2px 8px;border-radius:4px;
+  margin-bottom:10px;
+}
+.exp-current{
+  background:#DCFCE7;color:var(--green);
+  margin-left:8px;
+  font-family:'DM Sans',sans-serif;
+  font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;
+}
+.exp-bullets{list-style:none;}
+.exp-bullets li{
+  font-size:13.5px;color:var(--ink2);
+  padding:4px 0;
+  padding-left:16px;
+  position:relative;
+}
+.exp-bullets li::before{
+  content:'→';position:absolute;left:0;
+  color:var(--accent);font-size:12px;
+}
+
+/* ── EDUCATION ── */
+.edu-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+}
+.edu-card{
+  background:var(--surface2);
+  border-radius:10px;
+  padding:20px 22px;
+  border:1px solid var(--border);
+  position:relative;
+  overflow:hidden;
+}
+.edu-card.featured{
+  background:linear-gradient(135deg,var(--accent-pale),var(--surface2));
+  border-color:#BFDBFE;
+}
+.edu-card.featured::after{
+  content:'Ph.D';
+  position:absolute;right:-12px;top:10px;
+  background:var(--accent);color:#fff;
+  font-size:9px;font-weight:700;letter-spacing:0.1em;
+  padding:3px 20px;
+  transform:rotate(0deg);
+}
+.edu-degree{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.edu-spec{font-size:12.5px;color:var(--accent);font-weight:500;margin-bottom:8px;}
+.edu-inst{font-size:12px;color:var(--ink2);}
+.edu-meta{
+  display:flex;gap:10px;margin-top:10px;
+  flex-wrap:wrap;
+}
+.edu-tag{
+  font-size:11px;padding:2px 8px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:4px;color:var(--ink3);
+  font-family:'JetBrains Mono',monospace;
+}
+.edu-tag.distinction{background:var(--gold-pale);color:var(--gold);border-color:#FDE68A;}
+.edu-tag.first{background:var(--accent-pale);color:var(--accent);border-color:#BFDBFE;}
+
+/* ── PUBLICATIONS ── */
+.pub-item{
+  padding:20px 0;
+  border-bottom:1px solid var(--border);
+}
+.pub-item:last-child{border-bottom:none;padding-bottom:0;}
+.pub-title{font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:6px;line-height:1.5;}
+.pub-journal{font-size:12.5px;color:var(--accent);font-style:italic;margin-bottom:4px;}
+.pub-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.pub-year{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--ink3);
+  background:var(--surface2);padding:2px 8px;border-radius:4px;
+}
+.pub-issn{font-size:11px;color:var(--ink3);}
+.pub-type{
+  font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+  background:var(--accent-pale);color:var(--accent);
+  padding:2px 8px;border-radius:4px;
+}
+.pub-type.conference{background:var(--gold-pale);color:var(--gold);}
+
+/* ── FDP TABLE ── */
+.fdp-list{display:flex;flex-direction:column;gap:12px;}
+.fdp-item{
+  display:flex;align-items:flex-start;gap:16px;
+  background:var(--surface2);
+  border-radius:8px;padding:14px 18px;
+  border:1px solid var(--border);
+}
+.fdp-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+.fdp-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+.fdp-org{font-size:12px;color:var(--ink3);}
+.fdp-badge{
+  margin-left:auto;flex-shrink:0;
+  font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+  background:var(--green-pale);color:var(--green);
+  border:1px solid #BBF7D0;
+  padding:3px 10px;border-radius:999px;
+  white-space:nowrap;
+}
+
+/* ── SKILLS BARS ── */
+.skill-bar-item{margin-bottom:20px;}
+.skill-bar-header{
+  display:flex;justify-content:space-between;
+  font-size:13px;color:var(--ink2);font-weight:500;
+  margin-bottom:8px;
+}
+.skill-bar-track{
+  height:8px;background:var(--surface2);border-radius:999px;overflow:hidden;
+}
+.skill-bar-fill{
+  height:100%;border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transform:scaleX(0);transform-origin:left;
+  animation:barGrow 1s ease forwards;
+  animation-delay:var(--d,0s);
+}
+@keyframes barGrow{to{transform:scaleX(1);}}
+
+/* ── AWARD ── */
+.award-banner{
+  background:linear-gradient(135deg,#78350F,#B45309);
+  color:#FEF3C7;
+  border-radius:12px;
+  padding:28px 32px;
+  display:flex;align-items:center;gap:24px;
+}
+.award-trophy{font-size:48px;}
+.award-title{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:4px;}
+.award-org{font-size:13px;opacity:0.8;}
+.award-year{
+  margin-left:auto;
+  font-family:'JetBrains Mono',monospace;
+  font-size:28px;font-weight:300;
+  opacity:0.6;
+}
+
+/* ── PERSONAL ── */
+.personal-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+}
+.personal-item{
+  background:var(--surface2);border-radius:8px;padding:14px 18px;
+  border:1px solid var(--border);
+}
+.pi-label{font-size:11px;color:var(--ink3);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;}
+.pi-value{font-size:14px;color:var(--ink);font-weight:500;}
+
+/* ── ANIMS ── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.section:nth-child(1){animation-delay:0.05s;}
+.section:nth-child(2){animation-delay:0.1s;}
+.section:nth-child(3){animation-delay:0.15s;}
+.section:nth-child(4){animation-delay:0.2s;}
+.section:nth-child(5){animation-delay:0.25s;}
+.section:nth-child(6){animation-delay:0.3s;}
+
+/* ── COUNTER ANIM ── */
+.count-up{display:inline-block;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .stat-grid{grid-template-columns:repeat(2,1fr);}
+  .hero-bio{grid-template-columns:1fr;}
+  .bio-aside{flex-direction:row;}
+  .quick-stat{flex:1;}
+}
+@media(max-width:900px){
+  .sidebar{width:240px;}
+  .content{padding:24px;}
+  .edu-grid{grid-template-columns:1fr;}
+}
+@media(max-width:700px){
+  .shell{flex-direction:column;}
+  .sidebar{width:100%;height:auto;position:relative;flex-direction:row;flex-wrap:wrap;padding:20px;}
+  .stat-grid{grid-template-columns:repeat(2,1fr);}
+  .personal-grid{grid-template-columns:1fr 1fr;}
+  .topbar{padding:14px 20px;}
+  .content{padding:20px;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-avatar">SK</div>
+    <div class="sidebar-name">Satheesh K</div>
+    <div class="sidebar-role">Head & Asst. Professor</div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Navigation</div>
+
+    <a class="nav-item active" href="#overview">
+      <span class="nav-icon">📊</span> Overview
+    </a>
+    <a class="nav-item" href="#experience">
+      <span class="nav-icon">💼</span> Experience
+    </a>
+    <a class="nav-item" href="#education">
+      <span class="nav-icon">🎓</span> Education
+    </a>
+    <a class="nav-item" href="#research">
+      <span class="nav-icon">📄</span> Research
+    </a>
+    <a class="nav-item" href="#training">
+      <span class="nav-icon">🏛️</span> Training & FDPs
+    </a>
+    <a class="nav-item" href="#skills">
+      <span class="nav-icon">⚡</span> Skills
+    </a>
+    <a class="nav-item" href="#awards">
+      <span class="nav-icon">🏆</span> Awards
+    </a>
+    <a class="nav-item" href="#personal">
+      <span class="nav-icon">👤</span> Personal
+    </a>
+
+    <div class="sidebar-contact">
+      <div class="sidebar-divider" style="margin:0 0 16px;"></div>
+      <div class="contact-item">📧 <a href="/cdn-cgi/l/email-protection#7e0d1f0a161b1b0d163e12110711121f1d1112121b191b501f1d501710"><span class="__cf_email__" data-cfemail="0e7d6f7a666b6b7d664e62617761626f6d6162626b696b206f6d206760">[email&#160;protected]</span></a></div>
+      <div class="contact-item">📞 +91 89739 50602</div>
+      <div class="contact-item">🔗 <a href="https://linkedin.com/in/satheeshk87" target="_blank">linkedin.com/in/satheeshk87</a></div>
+      <div class="contact-item">📍 Salem, Tamil Nadu</div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        Academic Profile <span style="color:var(--border)">›</span>
+        <span>Satheesh K</span>
+      </div>
+      <div class="topbar-right">
+        <div class="badge-award">🏆 Best SPOC Award 2024</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ── OVERVIEW ── -->
+      <div class="section" id="overview">
+
+        <!-- STAT CARDS -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📚</div>
+            <div class="stat-number">11+</div>
+            <div class="stat-label">Years UG Teaching</div>
+            <div class="stat-sub">+ 4 years PG experience</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔬</div>
+            <div class="stat-number">3</div>
+            <div class="stat-label">Research Publications</div>
+            <div class="stat-sub">2 journals · 1 conference</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎓</div>
+            <div class="stat-number">4</div>
+            <div class="stat-label">Qualifications</div>
+            <div class="stat-sub">M.Phil · MCA · B.Sc · NET</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-number">1</div>
+            <div class="stat-label">National Award</div>
+            <div class="stat-sub">Best SPOC – TNSDC 2024</div>
+          </div>
+        </div>
+
+        <!-- HERO BIO -->
+        <div class="hero-bio">
+          <div>
+            <div class="bio-title">Satheesh K</div>
+            <div class="bio-role">Head & Assistant Professor · Dept. of Computer Science</div>
+            <div class="bio-text">
+              Dedicated academic professional with over <strong>11 years of UG teaching</strong> and <strong>4+ years of PG teaching</strong> experience in Computer Science. Proven leadership as Head of the Department with a focus on academic excellence, research development, and student engagement. Skilled in curriculum design, outcome-based education, and research guidance at Loyola College of Arts &amp; Science, Mettala.
+            </div>
+            <div class="skills-pills">
+              <span class="pill">Teaching & Curriculum</span>
+              <span class="pill">Academic Leadership</span>
+              <span class="pill purple">Research & Publications</span>
+              <span class="pill green">Student Mentorship</span>
+              <span class="pill gold">OBE Framework</span>
+              <span class="pill">Naan Mudhalvan SPOC</span>
+              <span class="pill">Team Collaboration</span>
+            </div>
+          </div>
+          <div class="bio-aside">
+            <div class="quick-stat">
+              <div class="qs-num">2019</div>
+              <div class="qs-label">Head of Dept. Since</div>
+            </div>
+            <div class="quick-stat">
+              <div class="qs-num">NET</div>
+              <div class="qs-label">Qualified 2019–2024</div>
+            </div>
+            <div class="quick-stat">
+              <div class="qs-num">M.Phil</div>
+              <div class="qs-label">Computer Science</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── EXPERIENCE ── -->
+      <div class="section" id="experience">
+        <div class="section-header">
+          <div class="section-title">Professional Experience</div>
+          <div class="section-subtitle">15+ years across leading institutions</div>
+        </div>
+        <div class="card">
+          <div class="exp-item">
+            <div class="exp-line">
+              <div class="exp-dot"></div>
+              <div class="exp-connector"></div>
+            </div>
+            <div class="exp-body">
+              <div class="exp-title">Head & Assistant Professor</div>
+              <div class="exp-org">Loyola College of Arts &amp; Science (Co-Ed), Mettala</div>
+              <div>
+                <span class="exp-period">June 2019 – Present</span>
+                <span class="exp-period exp-current">● Current</span>
+              </div>
+              <ul class="exp-bullets">
+                <li>Leading departmental activities, faculty coordination, and curriculum planning.</li>
+                <li>Serving as Naan Mudhalvan SPOC for student skill development programs.</li>
+                <li>Engaged in research, student mentorship, and institutional committees.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="exp-item">
+            <div class="exp-line">
+              <div class="exp-dot"></div>
+              <div class="exp-connector"></div>
+            </div>
+            <div class="exp-body">
+              <div class="exp-title">Assistant Professor</div>
+              <div class="exp-org">Adhiyamaan College of Engineering, Hosur</div>
+              <span class="exp-period">June 2018 – May 2019</span>
+              <ul class="exp-bullets">
+                <li>Taught undergraduate engineering courses in Computer Science.</li>
+                <li>Contributed to departmental academic and co-curricular activities.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="exp-item">
+            <div class="exp-line">
+              <div class="exp-dot"></div>
+            </div>
+            <div class="exp-body">
+              <div class="exp-title">Assistant Professor</div>
+              <div class="exp-org">Selvamm College, Namakkal</div>
+              <span class="exp-period">July 2013 – May 2018</span>
+              <ul class="exp-bullets">
+                <li>5 years of foundational UG teaching in Computer Science.</li>
+                <li>Active involvement in examinations, assessments, and student development.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── EDUCATION ── -->
+      <div class="section" id="education">
+        <div class="section-header">
+          <div class="section-title">Education</div>
+          <div class="section-subtitle">Academic qualifications & credentials</div>
+        </div>
+        <div class="edu-grid">
+
+          <div class="edu-card">
+            <div class="edu-degree">M.Phil</div>
+            <div class="edu-spec">Computer Science</div>
+            <div class="edu-inst">Periyar University · 2012</div>
+            <div class="edu-meta"><span class="edu-tag distinction">Distinction</span></div>
+          </div>
+          <div class="edu-card">
+            <div class="edu-degree">MCA</div>
+            <div class="edu-spec">Computer Applications</div>
+            <div class="edu-inst">IRTT, Erode · Anna University · 2010</div>
+            <div class="edu-meta"><span class="edu-tag first">First Class</span></div>
+          </div>
+          <div class="edu-card">
+            <div class="edu-degree">B.Sc</div>
+            <div class="edu-spec">Mathematics</div>
+            <div class="edu-inst">Govt. Arts College, Salem · Periyar University · 2007</div>
+            <div class="edu-meta"><span class="edu-tag">Second Class</span></div>
+          </div>
+          <div class="edu-card" style="grid-column:1/-1;background:var(--accent-pale);border-color:#BFDBFE;">
+            <div class="edu-degree" style="color:var(--accent);">NET Qualified</div>
+            <div class="edu-spec">Computer Science</div>
+            <div class="edu-inst">NTA (National Testing Agency) · 2019 – 2024</div>
+            <div class="edu-meta"><span class="edu-tag first">Nationally Qualified</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── RESEARCH ── -->
+      <div class="section" id="research">
+        <div class="section-header">
+          <div class="section-title">Research & Publications</div>
+          <div class="section-subtitle">Peer-reviewed journals & conference contributions</div>
+        </div>
+        <div class="card">
+          <div class="pub-item">
+            <div class="pub-title">Comparative Analysis of Image Enhancement Algorithms in Mammogram Images</div>
+            <div class="pub-journal">International Journal of Innovative Research and Creative Technology</div>
+            <div class="pub-meta">
+              <span class="pub-type">Journal</span>
+              <span class="pub-year">2015</span>
+              <span class="pub-issn">ISSN: 2454-5988</span>
+            </div>
+          </div>
+          <div class="pub-item">
+            <div class="pub-title">Analysis on Classification Techniques in Mammographic Mass Data Set</div>
+            <div class="pub-journal">International Journal of Engineering Research and Applications</div>
+            <div class="pub-meta">
+              <span class="pub-type">Journal</span>
+              <span class="pub-year">2015</span>
+              <span class="pub-issn">ISSN: 2248-9622</span>
+            </div>
+          </div>
+          <div class="pub-item">
+            <div class="pub-title">An Evaluation of Face Segmentation Algorithms</div>
+            <div class="pub-journal">EITECH Conference Proceedings</div>
+            <div class="pub-meta">
+              <span class="pub-type conference">Conference</span>
+              <span class="pub-year">2012</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TRAINING ── -->
+      <div class="section" id="training">
+        <div class="section-header">
+          <div class="section-title">Training / FDPs / Workshops</div>
+          <div class="section-subtitle">Continuing professional development</div>
+        </div>
+        <div class="card">
+          <div class="fdp-list">
+            <div class="fdp-item">
+              <div class="fdp-icon">📘</div>
+              <div>
+                <div class="fdp-title">Outcome Based Pedagogy Tools for Effective Teaching & Learning</div>
+                <div class="fdp-org">LIBA, Chennai · National Level · September 2024</div>
+              </div>
+              <span class="fdp-badge">National</span>
+            </div>
+            <div class="fdp-item">
+              <div class="fdp-icon">🚀</div>
+              <div>
+                <div class="fdp-title">Turning Passion into Action</div>
+                <div class="fdp-org">IQAC, Loyola College, Mettala · National Level · June 2025</div>
+              </div>
+              <span class="fdp-badge">National</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SKILLS ── -->
+      <div class="section" id="skills">
+        <div class="section-header">
+          <div class="section-title">Key Competencies</div>
+          <div class="section-subtitle">Self-assessed proficiency levels</div>
+        </div>
+        <div class="card">
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span>Teaching & Curriculum Development</span><span>95%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%;--d:0.1s;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span>Academic Leadership & Administration</span><span>92%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%;--d:0.2s;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span>Research & Publications</span><span>78%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:78%;--d:0.3s;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span>Student Mentorship</span><span>90%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%;--d:0.4s;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span>Outcome-Based Education (OBE)</span><span>88%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%;--d:0.5s;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span>Program Coordination (Naan Mudhalvan)</span><span>85%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%;--d:0.6s;"></div></div>
+          </div>
+          <div class="skill-bar-item" style="margin-bottom:0">
+            <div class="skill-bar-header"><span>Team Collaboration & Institutional Development</span><span>91%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:91%;--d:0.7s;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── AWARDS ── -->
+      <div class="section" id="awards">
+        <div class="section-header">
+          <div class="section-title">Awards & Recognition</div>
+        </div>
+        <div class="award-banner">
+          <div class="award-trophy">🏆</div>
+          <div>
+            <div class="award-title">Best SPOC Award</div>
+            <div class="award-org">Tamil Nadu Skill Development Corporation (TNSDC) · Naan Mudhalvan Programme</div>
+          </div>
+          <div class="award-year">2024</div>
+        </div>
+      </div>
+
+      <!-- ── PERSONAL ── -->
+      <div class="section" id="personal">
+        <div class="section-header">
+          <div class="section-title">Personal Details</div>
+        </div>
+        <div class="card">
+          <div class="personal-grid">
+            <div class="personal-item">
+              <div class="pi-label">Date of Birth</div>
+              <div class="pi-value">30 June 1987</div>
+            </div>
+            <div class="personal-item">
+              <div class="pi-label">Gender</div>
+              <div class="pi-value">Male</div>
+            </div>
+            <div class="personal-item">
+              <div class="pi-label">Marital Status</div>
+              <div class="pi-value">Married</div>
+            </div>
+            <div class="personal-item">
+              <div class="pi-label">Nationality</div>
+              <div class="pi-value">Indian</div>
+            </div>
+            <div class="personal-item">
+              <div class="pi-label">Languages Known</div>
+              <div class="pi-value">Tamil · English</div>
+            </div>
+            <div class="personal-item">
+              <div class="pi-label">Location</div>
+              <div class="pi-value">Salem, Tamil Nadu</div>
+            </div>
+          </div>
+          <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);font-size:13px;color:var(--ink3);font-style:italic;">
+            "I hereby declare that the information provided above is true to the best of my knowledge." — <strong style="color:var(--ink2);">Satheesh K</strong>, 29 August 2025
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Smooth scrolling & active nav
+const navItems = document.querySelectorAll('.nav-item');
+navItems.forEach(item => {
+  item.addEventListener('click', e => {
+    navItems.forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+
+// Intersection observer for active nav
+const sections = document.querySelectorAll('.section[id]');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navItems.forEach(n => {
+        n.classList.toggle('active', n.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { threshold: 0.3, rootMargin: '-80px 0px 0px 0px' });
+sections.forEach(s => observer.observe(s));
+
+// Count up animation
+const counters = document.querySelectorAll('.count-up');
+const countObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = parseInt(el.dataset.target);
+      let current = 0;
+      const step = Math.ceil(target / 30);
+      const timer = setInterval(() => {
+        current = Math.min(current + s
